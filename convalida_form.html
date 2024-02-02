@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Validazione Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+    <div class="col-5 m-3">
+        <h1>Validazione Form</h1>
+        <form id="form" name="registra" onsubmit="prevent(event)">
+            <div class="form-group">
+                <label>Nome</label>
+                <input id="nome" type="text" class="form-control" data-bs-toggle="tooltip" data-bs-placement="right"
+                    required>
+            </div>
+            <div class="form-group">
+                <label>Cognome</label>
+                <input id="cognome" type="text" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input id="email" type="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Numero di telefono</label>
+                <input id="numero" type="text" class="form-control" data-bs-toggle="tooltip" data-bs-placement="right"
+                    title="ciao" required>
+            </div>
+
+            <div class="form-group">
+                <label>Inserisci una descrizione</label>
+                <textarea id="descrizione" type="text" class="form-control" required style="max-height: 200px;"></textarea>
+            </div>
+
+            <div class="form-group">
+                <button id="invia" type="submit" class="btn btn-primary mt-2">
+                    Invia
+                </button>
+            </div>
+        </form>
+        <p id="pError"></p>
+    </div>
+
+
+
+    <script>
+        let verifica = {
+            nome: false,
+            email: false,
+            numero: false,
+        }
+
+
+        const p = document.getElementById("pError");
+
+        document.body.querySelector("#nome").addEventListener("change", function (event) {
+            convalidaNome(event)
+        });
+        document.body.querySelector("#cognome").addEventListener("change", function (event) {
+            convalidaNome(event)
+        });
+        document.body.querySelector("#email").addEventListener("change", function () {
+            convalidaEmail()
+        });
+
+        document.body.querySelector("#numero").addEventListener("change", function () {
+            convalidaNumero()
+        });
+
+        function isAlpha(ch) {
+            if (typeof ch !== "string") return false;
+            if (ch.length !== 1) return false;
+            if (!(ch >= "a" && ch <= "z" || ch >= "A" && ch <= "Z")) return false;
+            return true;
+        }
+
+        function convalidaNome(event) {
+            const elem = document.body.querySelector(`#${event.target.id}`);
+
+            for (let i = 0; i < elem.value.length; i++) {
+                if (!isAlpha(elem.value[i])) {
+                    elem.setAttribute("class", "form-control border border-danger");
+                    verifica.nome = false;
+                    break;
+                }
+                elem.setAttribute("class", "form-control border border-success");
+                verifica[event.target.id] = true;
+            }
+        }
+
+        function convalidaEmail() {
+            const elem = document.querySelector("#email");
+
+            if (elem.value.includes('@') && elem.value.includes('.')) {
+                elem.setAttribute("class", "form-control border border-success");
+                verifica.email = true;
+            } else {
+                elem.setAttribute("class", "form-control border border-danger");
+                verifica.email = false;
+                message += "Per favore inserisci una email valida (@ e .)<br>"
+            }
+        }
+
+        function convalidaNumero() {
+            const elem = document.querySelector("#numero");
+
+            for (let i = 0; i < elem.value.length; i++) {
+                if (isNaN(elem.value) || elem.value.length != 10) {
+                    elem.setAttribute("class", "form-control border border-danger");
+                    verifica.numero = false;
+                    message += "Per favore inserisci un numero valido (solo numeri)<br>"
+                    break;
+                }
+                elem.setAttribute("class", "form-control border border-success");
+                verifica.numero = true;
+            }
+        }
+
+        function prevent(e) {
+            let msg;
+            msg = "";
+
+            if(!verifica.nome) {
+                msg += "Per favore inserisci un nome valido (solo alpha)<br>";
+                e.preventDefault();
+            }
+            if(!verifica.email) {
+                msg += "Per favore inserisci una email valida (@ e .)<br>";
+                e.preventDefault();
+            }
+            if(!verifica.numero) {
+                msg += "Per favore inserisci un numero valido (solo numeri)<br>";
+                e.preventDefault();
+            }
+            p.innerHTML = msg;    
+        }
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
